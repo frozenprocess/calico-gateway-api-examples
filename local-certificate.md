@@ -8,6 +8,8 @@ A working example of Calico Ingress Gateway in a local environment
 - kubectl
 - curl
 
+> **Note**: There seems to be an issue when you are using macos, in such an environment the `Verify the installation` setp doesn't work. A workaround will be posted shortly.
+
 # Spin up the cluster
 
 ```bash
@@ -104,6 +106,27 @@ We need to delete this service, since two ports can not work in the same place.
 kubectl delete svc frontend-external
 ```
 
+## Enabling Calico Ingress Controller
+
+```bash
+kubectl create -f - <<EOF
+apiVersion: operator.tigera.io/v1
+kind: GatewayAPI
+metadata:
+ name: default
+EOF
+```
+
+Use the following command to verify:
+```bash
+kubectl wait --for=condition=Available tigerastatus gatewayapi
+```
+
+You should see a result similar to the following:
+```bash
+tigerastatus.operator.tigera.io/gatewayapi condition met
+```
+
 ### Install cert-manager
 
 ```bash
@@ -163,26 +186,6 @@ EOF
 ```
 
 
-## Enabling Calico Ingress Controller
-
-```bash
-kubectl create -f - <<EOF
-apiVersion: operator.tigera.io/v1
-kind: GatewayAPI
-metadata:
- name: default
-EOF
-```
-
-Use the following command to verify:
-```bash
-kubectl wait --for=condition=Available tigerastatus gatewayapi
-```
-
-You should see a result similar to the following:
-```bash
-tigerastatus.operator.tigera.io/gatewayapi condition met
-```
 
 Use the following command to create a gateway:
 ```bash
@@ -232,6 +235,17 @@ spec:
     - matches:
       - path:
           type: PathPrefix
+          value: /.well-known/acme-challenge/
+      backendRefs:
+      - group: ""
+        kind: Service
+        name: frontend
+        namespace: default
+        port: 80
+        weight: 1
+    - matches:
+      - path:
+          type: PathPrefix
           value: /
       filters:
       - type: RequestRedirect
@@ -251,7 +265,6 @@ spec:
     kind: Gateway
     name: calico-demo-gw
     namespace: default
-    hostname: secure-demo.local
     port: 443
     sectionName: https
   rules:
