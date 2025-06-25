@@ -50,8 +50,7 @@ eksctl create cluster --name  my-calico-cluster
 
 To begin, we install the Tigera Operator, which is the recommended method for managing the lifecycle of Calico and its components. The operator simplifies the process of installing, upgrading, and configuring Calico and your Cluster networking.
 ```bash
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/operator-crds.yaml
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.0/manifests/tigera-operator.yaml
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.2/manifests/tigera-operator.yaml
 ```
 Use the following command to verify the operator installation:
 ```bash
@@ -157,7 +156,7 @@ kubectl create -f - <<EOF
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: calico-demo-gw2
+  name: calico-demo-gw
 spec:
   gatewayClassName: tigera-gateway-class
   listeners:
