@@ -50,7 +50,7 @@ eksctl create cluster --name  my-calico-cluster
 
 To begin, we install the Tigera Operator, which is the recommended method for managing the lifecycle of Calico and its components. The operator simplifies the process of installing, upgrading, and configuring Calico and your Cluster networking.
 ```bash
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.2/manifests/tigera-operator.yaml
+kubectl create -f https://docs.tigera.io/calico/latest/manifests/tigera-operator.yaml
 ```
 Use the following command to verify the operator installation:
 ```bash
@@ -222,7 +222,7 @@ transfer-encoding: chunked
 
 Manually managing TLS certificates is tedious and error-prone. `cert-manager` automates issuance, renewal, and configuration, ensuring our application remains secure with valid certificates.
 ```bash
-kubectl create -f https://github.com/cert-manager/cert-manager/releases/download/v1.17.2/cert-manager.yaml
+kubectl create -f https://github.com/cert-manager/cert-manager/releases/download/v1.20.0/cert-manager.yaml
 ```
 ### Gateway API integration
 
@@ -263,10 +263,7 @@ spec:
     solvers:
     - http01:
         gatewayHTTPRoute:
-          parentRefs:
-          - kind: Gateway
-            name: calico-demo-gw
-            namespace: default
+          labels: {}
 EOF
 ```
 ## Enabling HTTPS using Calico Ingress Gateway
