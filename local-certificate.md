@@ -149,7 +149,7 @@ kubectl patch deployment -n cert-manager cert-manager --type='json' --patch '
 ```
 
 ```bash
-kubectl create -f - --<<EOF
+kubectl create -f - <<EOF
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
